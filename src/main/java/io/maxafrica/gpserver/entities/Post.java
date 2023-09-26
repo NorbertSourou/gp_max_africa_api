@@ -65,4 +65,7 @@ public class Post extends BaseEntity {
     @ManyToMany
     private List<SubCategory> subCategory;
 
+    @ManyToMany
+    private List<Tag> tags;
+
 }
