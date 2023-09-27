@@ -39,9 +39,6 @@ public class Post extends BaseEntity {
 
     private String description;
 
-    @Column(unique = true)
-    private String slug;
-
     @NotBlank
     private String url;
 
@@ -61,6 +58,8 @@ public class Post extends BaseEntity {
     @ManyToOne
     private User user;
 
+    @ManyToOne
+    private Category category;
 
     @ManyToMany
     private List<SubCategory> subCategory;

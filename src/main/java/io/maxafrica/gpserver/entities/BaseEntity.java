@@ -3,12 +3,11 @@ package io.maxafrica.gpserver.entities;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import io.maxafrica.gpserver.utils.CustomInstantDeSerializer;
 import io.maxafrica.gpserver.utils.CustomInstantSerializer;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedBy;
@@ -16,7 +15,9 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
+import java.util.UUID;
 
+@MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public abstract class BaseEntity {
 
@@ -24,6 +25,7 @@ public abstract class BaseEntity {
 
     @CreationTimestamp
     @JsonFormat(shape = JsonFormat.Shape.STRING)
+    @JsonDeserialize(using = CustomInstantDeSerializer.class)
     private Instant createdAt;
 
     @UpdateTimestamp
@@ -44,6 +46,9 @@ public abstract class BaseEntity {
 
     @JsonIgnore
     private boolean deleted;
+
+    @Column(unique = true)
+    private String slug;
 
     @JsonGetter
     @JsonSerialize(using = CustomInstantSerializer.class)
@@ -86,5 +91,18 @@ public abstract class BaseEntity {
 
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public String getSlug() {
+        return slug;
+    }
+
+    public void setSlug(String slug) {
+        this.slug = slug;
+    }
+
+    @PrePersist
+    public void generateSlug() {
+        this.slug = UUID.randomUUID().toString();
     }
 }

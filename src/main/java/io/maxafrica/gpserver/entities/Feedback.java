@@ -34,7 +34,6 @@ public class Feedback extends BaseEntity {
     @JdbcTypeCode(Types.VARCHAR)
     private UUID id;
 
-
     @Enumerated(EnumType.STRING)
     private PostFeedback postFeedback;
 
