@@ -17,11 +17,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "categories")
-@SQLDelete(sql =
-        "UPDATE categories " +
-                "SET deleted = true " +
-                "WHERE id = ?")
-@Where(clause = "deleted = false")
+@JpaEntity(table = "categories")
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)

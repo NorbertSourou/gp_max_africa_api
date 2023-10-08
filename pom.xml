@@ -14,7 +14,7 @@
 	<name>gp-server</name>
 	<description>gp-server</description>
 	<properties>
-		<java.version>11</java.version>
+		<java.version>17</java.version>
 		<jjwt.version>0.9.1</jjwt.version>
 	</properties>
 	<dependencies>
