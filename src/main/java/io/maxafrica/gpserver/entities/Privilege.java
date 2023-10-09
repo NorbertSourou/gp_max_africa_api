@@ -27,4 +27,9 @@ public class Privilege extends BaseEntity {
     private TypePrivilege name;
 
     private String description;
+
+    public Privilege(TypePrivilege name, String description) {
+        this.name = name;
+        this.description = description;
+    }
 }

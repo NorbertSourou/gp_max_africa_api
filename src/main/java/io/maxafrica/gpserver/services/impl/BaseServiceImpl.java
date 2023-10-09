@@ -1,4 +1,4 @@
-package io.maxafrica.gpserver.services;
+package io.maxafrica.gpserver.services.impl;
 
 import io.maxafrica.gpserver.dto.ApiResponse;
 import io.maxafrica.gpserver.dto.CreatePostData;
@@ -11,6 +11,7 @@ import io.maxafrica.gpserver.repositories.CategoryRepository;
 import io.maxafrica.gpserver.repositories.PostRepository;
 import io.maxafrica.gpserver.repositories.SubCategoryRepository;
 import io.maxafrica.gpserver.repositories.TagRepository;
+import io.maxafrica.gpserver.services.BaseService;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

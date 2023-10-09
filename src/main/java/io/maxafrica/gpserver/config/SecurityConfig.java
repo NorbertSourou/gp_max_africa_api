@@ -7,11 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -40,6 +42,8 @@ public class SecurityConfig {
     private JwtAuthenticationEntryPoint unauthorizedHandler;
 
 
+
+
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
         return new JwtAuthenticationFilter();
@@ -54,6 +58,20 @@ public class SecurityConfig {
     @Bean
     RequestRejectedHandler requestRejectedHandler() {
         return new HttpStatusRequestRejectedHandler();
+    }
+
+    @Bean
+    public AuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(customUserDetailsService);
+        authProvider.setPasswordEncoder(passwordEncoder());
+        return authProvider;
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config)
+            throws Exception {
+        return config.getAuthenticationManager();
     }
 
     @Bean
@@ -86,11 +104,20 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .cors(AbstractHttpConfigurer::disable)
-                .csrf((csrf) -> csrf.ignoringRequestMatchers(new AntPathRequestMatcher("/chat/**")))
+//                .csrf((csrf) -> csrf.ignoringRequestMatchers(new AntPathRequestMatcher("/chat/**")))
+                .csrf(AbstractHttpConfigurer::disable)
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->
                         auth
+                                .requestMatchers("/api/auth/login", "/api/auth/register")
+                                .permitAll()
+                                .requestMatchers(HttpMethod.POST, "/api/medias")
+                                .permitAll()
+                                .requestMatchers(new AntPathRequestMatcher("/swagger-ui/**"), new AntPathRequestMatcher("/v2/api-docs"), new AntPathRequestMatcher(("swagger-resources/**")))
+                                .permitAll()
+                                .requestMatchers(new AntPathRequestMatcher("/websocket"))
+                                .permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/"),
                                         new AntPathRequestMatcher("/favicon.ico"),
                                         new AntPathRequestMatcher("/**/*.png"),
@@ -101,14 +128,7 @@ public class SecurityConfig {
                                         new AntPathRequestMatcher("/**/*.css"),
                                         new AntPathRequestMatcher("/**/*.js"))
                                        .permitAll()
-                                .requestMatchers("/api/auth/login", "/api/auth/register", "/api/register/confirm-account")
-                                .permitAll()
-                                .requestMatchers(HttpMethod.POST, "/api/medias")
-                                .permitAll()
-                                .requestMatchers(new AntPathRequestMatcher("/swagger-ui/**"), new AntPathRequestMatcher("/v2/api-docs"), new AntPathRequestMatcher(("/swagger-resources/**")))
-                                .permitAll()
-                                .requestMatchers(new AntPathRequestMatcher("/websocket"))
-                                .permitAll()
+
                                 .anyRequest()
                                 .authenticated()
                 );

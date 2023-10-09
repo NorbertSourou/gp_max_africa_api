@@ -49,6 +49,8 @@ public class TokenProvider {
         userDetails.getAuthorities().forEach(role -> {
             roles.add(role.getAuthority());
         });
+
+
         claims.put("permissions", roles.toArray(new String[0]));
 
         // JWT for permission

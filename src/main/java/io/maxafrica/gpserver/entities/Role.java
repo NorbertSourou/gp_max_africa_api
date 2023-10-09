@@ -42,4 +42,20 @@ public class Role extends BaseEntity {
     @JoinColumn
     @JsonIgnore
     private User createdBy;
+
+    public Role() {
+    }
+
+    public Role(int id, String name, String description, Collection<Privilege> privileges, User createdBy) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.privileges = privileges;
+        this.createdBy = createdBy;
+    }
+
+    public Role(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
 }

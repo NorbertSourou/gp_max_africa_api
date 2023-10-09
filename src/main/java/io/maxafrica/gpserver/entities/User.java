@@ -41,7 +41,7 @@ public class User extends BaseEntity {
 
     private String phoneNumber;
 
-    @Size(min=8, max=20)
+    @Size(max = 100, min = 6)
     @NotBlank
     @JsonIgnore
     private String password;

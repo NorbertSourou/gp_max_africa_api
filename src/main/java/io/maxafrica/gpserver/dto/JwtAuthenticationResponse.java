@@ -20,4 +20,36 @@ public class JwtAuthenticationResponse {
         this.expiryToken = expiryToken;
         this.tokenPermission = tokenPermission;
     }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public String getRefreshToken() {
+        return refreshToken;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
+
+    public Date getExpiryToken() {
+        return expiryToken;
+    }
+
+    public void setExpiryToken(Date expiryToken) {
+        this.expiryToken = expiryToken;
+    }
+
+    public String getTokenPermission() {
+        return tokenPermission;
+    }
+
+    public void setTokenPermission(String tokenPermission) {
+        this.tokenPermission = tokenPermission;
+    }
 }
