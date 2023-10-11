@@ -25,6 +25,4 @@ public interface BaseClientService {
 //    TODO: autres videos  à suivre CLIENT
 
 
-
-
 }
