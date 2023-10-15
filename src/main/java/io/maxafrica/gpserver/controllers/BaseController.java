@@ -45,7 +45,7 @@ public class BaseController {
     }
 
     @PostMapping("categories/{categoryId}/sub-categories")
-    public SubCategory addSubCategory(@PathVariable UUID categoryId, @RequestBody  SubCategory subCategory) {
+    public SubCategory addSubCategory(@PathVariable UUID categoryId, @RequestBody SubCategory subCategory) {
         return baseService.addSubCategory(categoryId, subCategory);
     }
 
