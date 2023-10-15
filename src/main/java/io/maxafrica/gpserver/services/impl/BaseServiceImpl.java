@@ -12,6 +12,7 @@ import io.maxafrica.gpserver.repositories.PostRepository;
 import io.maxafrica.gpserver.repositories.SubCategoryRepository;
 import io.maxafrica.gpserver.repositories.TagRepository;
 import io.maxafrica.gpserver.services.BaseService;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -119,6 +120,11 @@ public class BaseServiceImpl implements BaseService {
 
     @Override
     public Post updatePost(UUID postId, CreatePostData createPostData) {
+        return null;
+    }
+
+    @Override
+    public Page<Post> getPosts(UUID categoryId, UUID subCategoryId, String search, int page, int size) {
         return null;
     }
 }

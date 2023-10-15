@@ -6,6 +6,7 @@ import io.maxafrica.gpserver.entities.Category;
 import io.maxafrica.gpserver.entities.Post;
 import io.maxafrica.gpserver.entities.SubCategory;
 import io.maxafrica.gpserver.entities.Tag;
+import org.springframework.data.domain.Page;
 
 
 import java.util.List;
@@ -43,4 +44,9 @@ public interface BaseService {
     Post addPost(CreatePostData createPostData);
 
     Post updatePost(UUID postId, CreatePostData createPostData);
+    Page<Post> getPosts(UUID categoryId, UUID subCategoryId, String search, int page, int size);
+
+    //    TODO: autres videos  à suivre
+
+    //    TODO: crud des tendances actuelles ( limit 3)
 }
