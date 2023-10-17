@@ -27,7 +27,8 @@ public class BaseServiceImpl implements BaseService {
     private final TagRepository tagRepository;
     private final PostRepository postRepository;
 
-    public BaseServiceImpl(CategoryRepository categoryRepository, SubCategoryRepository subCategoryRepository, TagRepository tagRepository, PostRepository postRepository) {
+    public BaseServiceImpl(CategoryRepository categoryRepository, SubCategoryRepository subCategoryRepository,
+                           TagRepository tagRepository, PostRepository postRepository) {
         this.categoryRepository = categoryRepository;
         this.subCategoryRepository = subCategoryRepository;
         this.tagRepository = tagRepository;
@@ -61,33 +62,30 @@ public class BaseServiceImpl implements BaseService {
     }
 
     @Override
-    public List<SubCategory> getSubCategory(UUID categoryId) {
-        Category categoryDb = categoryRepository.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException("Category", "ID", categoryId));
-        return categoryDb.getSubCategories();
+    public List<SubCategory> getSubCategories(UUID categoryId) {
+        return null;
+    }
+
+    @Override
+    public SubCategory getSubCategory(Long subCategoryId) {
+        return null;
     }
 
     @Override
     public SubCategory addSubCategory(UUID categoryId, SubCategory subCategory) {
-        Category categoryDb = categoryRepository.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException("Category", "ID", categoryId));
-        subCategory.setCategory(categoryDb);
-        return subCategoryRepository.save(subCategory);
+        return null;
     }
 
     @Override
-    public SubCategory updateSubCategory(UUID categoryId, Long subCategoryId, SubCategory subCategory) {
-        Category categoryDb = categoryRepository.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException("Category", "ID", categoryId));
-        SubCategory subCategoryDb = subCategoryRepository.findById(subCategoryId).orElseThrow(() -> new ResourceNotFoundException("SubCategory", "ID", subCategoryId));
-        subCategoryDb.setCategory(categoryDb);
-        subCategoryDb.setName(subCategory.getName());
-        return subCategoryRepository.save(subCategoryDb);
+    public SubCategory updateSubCategory(Long subCategoryId, SubCategory subCategory) {
+        return null;
     }
 
     @Override
-    public ApiResponse deleteSubCategory(UUID categoryId, Long subCategoryId) {
-        subCategoryRepository.findById(subCategoryId).orElseThrow(() -> new ResourceNotFoundException("SubCategory", "ID", subCategoryId));
-        subCategoryRepository.deleteById(subCategoryId);
-        return new ApiResponse(true, "Done");
+    public ApiResponse deleteSubCategory(Long subCategoryId) {
+        return null;
     }
+
 
     @Override
     public List<Tag> getTags() {
@@ -125,6 +123,31 @@ public class BaseServiceImpl implements BaseService {
 
     @Override
     public Page<Post> getPosts(UUID categoryId, UUID subCategoryId, String search, int page, int size) {
+        return null;
+    }
+
+    @Override
+    public List<Post> getPosts(Long subCategoryId) {
+        return null;
+    }
+
+    @Override
+    public Post getPost(UUID postId) {
+        return null;
+    }
+
+    @Override
+    public Post addPost(Long subCategoryId, Post post) {
+        return null;
+    }
+
+    @Override
+    public Post updatePost(UUID postId, Post post) {
+        return null;
+    }
+
+    @Override
+    public ApiResponse deletePost(UUID postId) {
         return null;
     }
 }

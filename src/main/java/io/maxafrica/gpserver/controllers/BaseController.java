@@ -41,7 +41,7 @@ public class BaseController {
 
     @GetMapping("categories/{categoryId}/sub-categories")
     public List<SubCategory> getSubCategories(@PathVariable UUID categoryId) {
-        return baseService.getSubCategory(categoryId);
+        return baseService.getSubCategories(categoryId);
     }
 
     @PostMapping("categories/{categoryId}/sub-categories")

@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface BaseService {
+    //   todo : Manage categories here
     Category addCategory(Category category);
 
     List<Category> getCategories();
@@ -21,18 +22,32 @@ public interface BaseService {
 
     ApiResponse deleteCategory(UUID categoryId);
 
+    //    todo : Manage sub categories here
+    List<SubCategory> getSubCategories(UUID categoryId);
 
-    List<SubCategory> getSubCategory(UUID categoryId);
+    SubCategory getSubCategory(Long subCategoryId);
 
     SubCategory addSubCategory(UUID categoryId, SubCategory subCategory);
 
-    SubCategory updateSubCategory(UUID categoryId, Long subCategoryId, SubCategory subCategory);
+    SubCategory updateSubCategory(Long subCategoryId, SubCategory subCategory);
 
-    ApiResponse deleteSubCategory(UUID categoryId, Long subCategoryId);
+    ApiResponse deleteSubCategory(Long subCategoryId);
 
 
     //    todo : Manage post here
+    Page<Post> getPosts(UUID categoryId, UUID subCategoryId, String search, int page, int size);
 
+    List<Post> getPosts(Long subCategoryId);
+
+    Post getPost(UUID postId);
+
+    Post addPost(Long subCategoryId, Post post);
+
+    Post updatePost(UUID postId, Post post);
+
+    ApiResponse deletePost(UUID postId);
+
+    //   todo : Manage tags here
     List<Tag> getTags();
 
     Tag addTag(Tag tag);
@@ -44,7 +59,7 @@ public interface BaseService {
     Post addPost(CreatePostData createPostData);
 
     Post updatePost(UUID postId, CreatePostData createPostData);
-    Page<Post> getPosts(UUID categoryId, UUID subCategoryId, String search, int page, int size);
+
 
     //    TODO: autres videos  à suivre
 
