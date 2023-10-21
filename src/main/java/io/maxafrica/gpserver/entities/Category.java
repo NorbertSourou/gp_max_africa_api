@@ -33,6 +33,11 @@ public class Category extends BaseEntity {
 
     private String position;
 
+    public Category(String name, String position) {
+        this.name = name;
+        this.position = position;
+    }
+
     @OneToMany(mappedBy = "category")
     private List<SubCategory> subCategories;
 

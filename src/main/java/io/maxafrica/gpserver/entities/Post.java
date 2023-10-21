@@ -42,6 +42,8 @@ public class Post extends BaseEntity {
     @NotBlank
     private String url;
 
+    private String position;
+
     @NotBlank
     private String imageUrl;
 
@@ -50,6 +52,14 @@ public class Post extends BaseEntity {
     private Long nbComments;
 
     private Long nbViews;
+
+    public Post(String title, String description, String url, String position, String imageUrl) {
+        this.title = title;
+        this.description = description;
+        this.url = url;
+        this.position = position;
+        this.imageUrl = imageUrl;
+    }
 
     @Column(columnDefinition = "varchar(50) default 'PUBLIC'")
     @Enumerated(EnumType.STRING)
@@ -61,7 +71,8 @@ public class Post extends BaseEntity {
     @ManyToOne
     private Category category;
 
-    @ManyToMany
+
+    @ManyToMany(fetch = FetchType.EAGER)
     private List<SubCategory> subCategory;
 
     @ManyToMany

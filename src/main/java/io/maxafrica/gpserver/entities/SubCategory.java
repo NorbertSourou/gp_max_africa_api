@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
+import java.util.List;
+
 @Entity
 @Table(name = "subcategories")
 @SQLDelete(sql =
@@ -19,6 +21,7 @@ import org.hibernate.annotations.Where;
 @Where(clause = "deleted = false")
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
 @EqualsAndHashCode(callSuper = true)
 public class SubCategory extends BaseEntity {
 
@@ -32,6 +35,17 @@ public class SubCategory extends BaseEntity {
     @JsonIgnore
     @ManyToOne
     private Category category;
+
+    private String position;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    private List<Post> posts;
+
+    public SubCategory(String name, Category category, String position) {
+        this.name = name;
+        this.category = category;
+        this.position = position;
+    }
 
     public Long getId() {
         return id;
