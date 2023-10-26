@@ -10,7 +10,6 @@ import io.maxafrica.gpserver.entities.enums.UserType;
 import io.maxafrica.gpserver.repositories.RoleRepository;
 import io.maxafrica.gpserver.repositories.UserRepository;
 import io.maxafrica.gpserver.security.TokenProvider;
-import io.maxafrica.gpserver.security.UserPrincipal;
 import io.maxafrica.gpserver.services.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,6 +20,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.net.URI;
 
 
 @Service
@@ -51,20 +52,33 @@ public class AuthServiceImpl implements AuthService {
 //    }
 
     @Override
-    public ApiResponse createUser(RegisterUser registerUser) {
+    public ResponseEntity<ApiResponse> createUser(RegisterUser registerUser) {
         Role role = roleRepository.findByName(userRole);
+        if (userRepository.existsByEmail(registerUser.getEmail())) {
+            return ResponseEntity.badRequest().body(new ApiResponse(false, "User already registered!"));
+        }
+
+
         User user = new User();
         user.setEmail(registerUser.getEmail());
-        user.setUsername(registerUser.getFirstName());
+        user.setUsername(generateUsername(registerUser.getFirstName(), registerUser.getLastName()));
         user.setFirstname(registerUser.getFirstName());
         user.setLastname(registerUser.getLastName());
         user.setPassword(this.passwordEncoder.encode(registerUser.getPassword()));
         user.setRole(role);
         user.setUserType(UserType.MOBILE_USER);
         userRepository.save(user);
-        
-        // TODO: 10/9/2023  : validate user account here        
-        return new ApiResponse(true, user.getFirstname() + " " + user.getLastname() + " successfully create");
+
+        // TODO: 10/9/2023  : validate user account here
+        return ResponseEntity.created(URI.create("/user/"+user.getId())).body(new ApiResponse(true, user.getFirstname() + " " + user.getLastname() + " successfully create"));
+    }
+
+    public String generateUsername(String firstName, String lastName) {
+        String firstNameLower = firstName.toLowerCase().replaceAll("[^a-z0-9]", "");
+        String lastNameLower = lastName.toLowerCase().replaceAll("[^a-z0-9]", "");
+        int random = (int) (Math.random() * 10000);
+
+        return firstNameLower + lastNameLower + random;
     }
 
     @Override
@@ -83,7 +97,6 @@ public class AuthServiceImpl implements AuthService {
 //        User user = userRepository.findById(userP.getId()).orElseThrow();
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-
 
 
         JwtAuthenticationResponse token = tokenProvider.generateToken(authentication);
