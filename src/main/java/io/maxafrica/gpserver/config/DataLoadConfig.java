@@ -65,7 +65,7 @@ public class DataLoadConfig {
 
         List<Post> postList = new ArrayList<>();
 
-        Resource resource = new ClassPathResource("posts.csv");
+        Resource resource = new ClassPathResource("static/posts.csv");
 
         String filePath;
 
@@ -95,7 +95,7 @@ public class DataLoadConfig {
     private void loadLinkPostsCategories() {
 
 
-        Resource resource = new ClassPathResource("category_post.csv");
+        Resource resource = new ClassPathResource("static/category_post.csv");
 
         String filePath;
 
@@ -128,7 +128,7 @@ public class DataLoadConfig {
 
     private void loadPostsSubCategories() {
 
-        Resource resource = new ClassPathResource("post_subcategory.csv");
+        Resource resource = new ClassPathResource("static/post_subcategory.csv");
 
         String filePath;
 
@@ -162,7 +162,7 @@ public class DataLoadConfig {
 
         List<SubCategory> subCategoryList = new ArrayList<>();
 
-        Resource resource = new ClassPathResource("subcategories.csv");
+        Resource resource = new ClassPathResource("static/subcategories.csv");
 
         String filePath;
 
@@ -209,7 +209,7 @@ public class DataLoadConfig {
 
         List<Category> categoriesList = new ArrayList<>();
 
-        Resource resource = new ClassPathResource("categories.csv");
+        Resource resource = new ClassPathResource("static/categories.csv");
 
         String filePath;
         try {

@@ -114,7 +114,7 @@ public class SecurityConfig {
                                 .permitAll()
                                 .requestMatchers(HttpMethod.POST, "/api/medias")
                                 .permitAll()
-                                .requestMatchers(new AntPathRequestMatcher("/swagger-ui/**"), new AntPathRequestMatcher("/v2/api-docs"), new AntPathRequestMatcher(("swagger-resources/**")))
+                                .requestMatchers(new AntPathRequestMatcher("/v3/api-docs/swagger-config"), new AntPathRequestMatcher("/swagger-ui/**"), new AntPathRequestMatcher("/v3/api-docs"))
                                 .permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/websocket"))
                                 .permitAll()

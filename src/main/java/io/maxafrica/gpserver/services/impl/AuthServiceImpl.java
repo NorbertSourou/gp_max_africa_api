@@ -12,6 +12,7 @@ import io.maxafrica.gpserver.repositories.UserRepository;
 import io.maxafrica.gpserver.security.TokenProvider;
 import io.maxafrica.gpserver.security.UserPrincipal;
 import io.maxafrica.gpserver.services.AuthService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 
 @Service
+@RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
 
@@ -39,14 +41,14 @@ public class AuthServiceImpl implements AuthService {
     @Value("${user.role}")
     private String userRole;
 
-
-    public AuthServiceImpl(UserRepository userRepository, RoleRepository roleRepository, TokenProvider tokenProvider, AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-        this.tokenProvider = tokenProvider;
-        this.authenticationManager = authenticationManager;
-        this.passwordEncoder = passwordEncoder;
-    }
+//
+//    public AuthServiceImpl(UserRepository userRepository, RoleRepository roleRepository, TokenProvider tokenProvider, AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder) {
+//        this.userRepository = userRepository;
+//        this.roleRepository = roleRepository;
+//        this.tokenProvider = tokenProvider;
+//        this.authenticationManager = authenticationManager;
+//        this.passwordEncoder = passwordEncoder;
+//    }
 
     @Override
     public ApiResponse createUser(RegisterUser registerUser) {
