@@ -6,7 +6,7 @@ import io.maxafrica.gpserver.dto.RegisterUser;
 import org.springframework.http.ResponseEntity;
 
 public interface AuthService {
-    ApiResponse createUser(RegisterUser registerUser);
+    ResponseEntity<ApiResponse> createUser(RegisterUser registerUser);
 
     ResponseEntity<?>  authenticateUser(LoginRequest loginRequest);
 }

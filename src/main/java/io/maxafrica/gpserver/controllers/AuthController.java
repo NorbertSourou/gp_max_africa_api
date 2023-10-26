@@ -22,7 +22,7 @@ public class AuthController {
     }
 
     @PostMapping("register")
-    public ApiResponse createUser(@RequestBody  RegisterUser registerUser) {
+    public ResponseEntity<ApiResponse>  createUser(@RequestBody  RegisterUser registerUser) {
         return this.authService.createUser(registerUser);
     }
 
