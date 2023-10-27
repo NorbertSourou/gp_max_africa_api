@@ -1,8 +1,11 @@
 package io.maxafrica.gpserver.security;
 
 import io.jsonwebtoken.*;
+import io.maxafrica.gpserver.dto.CategoryDTO;
 import io.maxafrica.gpserver.dto.JwtAuthenticationResponse;
-import io.maxafrica.gpserver.repositories.UserRepository;
+import io.maxafrica.gpserver.dto.UserResponse;
+import io.maxafrica.gpserver.entities.Category;
+import io.maxafrica.gpserver.services.BaseService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,6 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 public class TokenProvider {
@@ -26,12 +30,13 @@ public class TokenProvider {
     @Value("${jwt.jwtRefreshExpirationInMs}")
     private long jwtRefreshExpirationInMs;
 
-
+    private final BaseService baseService;
     private static final Logger logger = LoggerFactory.getLogger(TokenProvider.class);
 
 
-    public TokenProvider() {
+    public TokenProvider(BaseService baseService) {
 
+        this.baseService = baseService;
     }
 
 
@@ -79,7 +84,21 @@ public class TokenProvider {
                 .signWith(SignatureAlgorithm.HS512, jwtRefreshSecret.getBytes())
                 .compact();
 
-        return new JwtAuthenticationResponse(token, accessToken, expiryDate, tokenPermission);
+
+        List<CategoryDTO> categoryDTOS = baseService.getCategories().stream()
+                .map(this::convertToDto)
+                .toList();
+
+
+        return new JwtAuthenticationResponse(token, accessToken, expiryDate, tokenPermission, new UserResponse(userDetails.getUsername(), userDetails.getEmail()), categoryDTOS);
+    }
+
+    private CategoryDTO convertToDto(Category category) {
+        CategoryDTO categoryDTO = new CategoryDTO();
+        categoryDTO.setId(category.getId());
+        categoryDTO.setPosition(category.getPosition());
+        categoryDTO.setName(category.getName());
+        return categoryDTO;
     }
 
     public String getUserIdFromJWT(String token) {
@@ -97,8 +116,8 @@ public class TokenProvider {
 
     private boolean validateJWT(String authToken, String jwtSecret) {
 //        try {
-            Jwts.parser().setSigningKey(jwtSecret.getBytes()).parseClaimsJws(authToken);
-            return true;
+        Jwts.parser().setSigningKey(jwtSecret.getBytes()).parseClaimsJws(authToken);
+        return true;
 //        } catch (SignatureException ex) {
 //            logger.error("Invalid JWT signature");
 //            throw ex;

@@ -3,6 +3,7 @@ package io.maxafrica.gpserver.entities;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
@@ -23,6 +24,7 @@ import java.util.UUID;
 @Where(clause = "deleted = false")
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
 @EqualsAndHashCode(callSuper = true)
 public class Category extends BaseEntity {
     @Id

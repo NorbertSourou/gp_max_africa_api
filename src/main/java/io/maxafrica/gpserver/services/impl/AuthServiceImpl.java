@@ -61,7 +61,7 @@ public class AuthServiceImpl implements AuthService {
         userRepository.save(user);
 
         // TODO: 10/9/2023  : validate user account here
-        return ResponseEntity.created(URI.create("/user/"+user.getId())).body(new ApiResponse(true, user.getFirstname() + " " + user.getLastname() + " successfully create"));
+        return ResponseEntity.created(URI.create("/user/" + user.getId())).body(new ApiResponse(true, user.getFirstname() + " " + user.getLastname() + " successfully create"));
     }
 
     public String generateUsername(String firstName, String lastName) {

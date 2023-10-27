@@ -41,6 +41,7 @@ public class DataLoadConfig {
     @PostConstruct
     public void loadData() {
         loadRole();
+
         loadCategoriesCsv();
         loadSubCategories();
         loadPosts();
