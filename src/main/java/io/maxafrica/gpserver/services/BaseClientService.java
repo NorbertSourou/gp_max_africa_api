@@ -1,5 +1,8 @@
 package io.maxafrica.gpserver.services;
 
+import io.maxafrica.gpserver.dto.CategoryDTO;
+import io.maxafrica.gpserver.dto.PostDTO;
+import io.maxafrica.gpserver.dto.SubCategoryDTO;
 import io.maxafrica.gpserver.entities.Category;
 import io.maxafrica.gpserver.entities.Post;
 import io.maxafrica.gpserver.entities.SubCategory;
@@ -11,20 +14,21 @@ import java.util.UUID;
 public interface BaseClientService {
 
 //    TODO: tendances actuelles  CLIENT ( limit 3)
-    List<Category> getCategories();
+    List<CategoryDTO> getCategories(int limit);
+    Page<CategoryDTO> getCategoriesPage(String search, int page, int size);
 
-    SubCategory getSubCategory(Long subCategoryId);
+    SubCategoryDTO getSubCategory(Long subCategoryId);
 
-    Post getPost(UUID postId);
+    PostDTO getPost(UUID postId);
 
     // liste des sous categories (limit 4 et liste paginée)
-    Page<SubCategory> getSubCategoriesByCategoryPage(UUID categoryId, String search, int page, int size);
+    List<SubCategoryDTO> getSubCategoriesByCategory(UUID categoryId, String search, int limit);
 
-    Page<Post> getPostsBySubCategoryPage(Long subCategoryId, String search, int page, int size);
+    Page<SubCategoryDTO> getSubCategoriesByCategoryPage(UUID categoryId, String search, int page, int size);
 
-    Page<Post> getPostsByCategoryAndSubCategoryPage(UUID categoryId, Long subCategoryId, String search, int page, int size);
+    Page<PostDTO> getPostsBySubCategoryPage(Long subCategoryId, String search, int page, int size);
 
-
+    Page<PostDTO> getPostsByCategoryAndSubCategoryPage(UUID categoryId, Long subCategoryId, String search, int page, int size);
 //    TODO: autres videos  à suivre CLIENT
 
 

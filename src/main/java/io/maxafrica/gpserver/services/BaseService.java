@@ -2,8 +2,9 @@ package io.maxafrica.gpserver.services;
 
 import io.maxafrica.gpserver.dto.ApiResponse;
 import io.maxafrica.gpserver.dto.CreatePostData;
+import io.maxafrica.gpserver.dto.PostDTO;
+import io.maxafrica.gpserver.dto.SubCategoryDTO;
 import io.maxafrica.gpserver.entities.Category;
-import io.maxafrica.gpserver.entities.Post;
 import io.maxafrica.gpserver.entities.SubCategory;
 import io.maxafrica.gpserver.entities.Tag;
 import org.springframework.data.domain.Page;
@@ -13,7 +14,6 @@ import java.util.List;
 import java.util.UUID;
 
 public interface BaseService {
-    //   todo : Manage categories here
     Category addCategory(Category category);
 
     List<Category> getCategories();
@@ -22,32 +22,27 @@ public interface BaseService {
 
     ApiResponse deleteCategory(UUID categoryId);
 
-    //    todo : Manage sub categories here
-    List<SubCategory> getSubCategories(UUID categoryId);
+    List<SubCategoryDTO> getSubCategories(UUID categoryId);
 
-    SubCategory getSubCategory(Long subCategoryId);
+    SubCategoryDTO getSubCategory(Long subCategoryId);
 
-    SubCategory addSubCategory(UUID categoryId, SubCategory subCategory);
+    SubCategoryDTO addSubCategory(UUID categoryId, SubCategoryDTO subCategoryDTO);
 
-    SubCategory updateSubCategory(Long subCategoryId, SubCategory subCategory);
+    SubCategoryDTO updateSubCategory(Long subCategoryId, SubCategoryDTO subCategoryDTO);
 
     ApiResponse deleteSubCategory(Long subCategoryId);
 
 
-    //    todo : Manage post here
-    Page<Post> getPosts(UUID categoryId, UUID subCategoryId, String search, int page, int size);
+    Page<PostDTO> getPosts(List<UUID> categoryIds, List<Long> subCategoryIds, String search, int page, int size);
 
-    List<Post> getPosts(Long subCategoryId);
+    List<PostDTO> getPosts(Long subCategoryId);
 
-    Post getPost(UUID postId);
+    PostDTO getPostById(UUID postId);
 
-    Post addPost(Long subCategoryId, Post post);
-
-    Post updatePost(UUID postId, Post post);
+    PostDTO updateSimplePostInformation(UUID postId, PostDTO postDto);
 
     ApiResponse deletePost(UUID postId);
 
-    //   todo : Manage tags here
     List<Tag> getTags();
 
     Tag addTag(Tag tag);
@@ -56,9 +51,9 @@ public interface BaseService {
 
     ApiResponse deleteTag(Long tagId);
 
-    Post addPost(CreatePostData createPostData);
+    PostDTO addPost(CreatePostData createPostData);
 
-    Post updatePost(UUID postId, CreatePostData createPostData);
+    PostDTO updatePost(UUID postId, CreatePostData createPostData);
 
 
     //    TODO: autres videos  à suivre

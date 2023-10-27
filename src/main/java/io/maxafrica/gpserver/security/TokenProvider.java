@@ -96,21 +96,25 @@ public class TokenProvider {
     }
 
     private boolean validateJWT(String authToken, String jwtSecret) {
-        try {
+//        try {
             Jwts.parser().setSigningKey(jwtSecret.getBytes()).parseClaimsJws(authToken);
             return true;
-        } catch (SignatureException ex) {
-            logger.error("Invalid JWT signature");
-        } catch (MalformedJwtException ex) {
-            logger.error("Invalid JWT token");
-        } catch (ExpiredJwtException ex) {
-            logger.error("Expired JWT token");
-        } catch (UnsupportedJwtException ex) {
-            logger.error("Unsupported JWT token");
-        } catch (IllegalArgumentException ex) {
-            logger.error("JWT claims string is empty.");
-        }
-        return false;
+//        } catch (SignatureException ex) {
+//            logger.error("Invalid JWT signature");
+//            throw ex;
+//        } catch (MalformedJwtException ex) {
+//            logger.error("Invalid JWT token");
+//            throw ex;
+//        } catch (ExpiredJwtException ex) {
+//            logger.error("Expired JWT token");
+//            throw ex;
+//        } catch (UnsupportedJwtException ex) {
+//            logger.error("Unsupported JWT token");
+//            throw ex;
+//        } catch (IllegalArgumentException ex) {
+//            logger.error("JWT claims string is empty.");
+//            throw ex;
+//        }
     }
 
 

@@ -3,7 +3,9 @@ package io.maxafrica.gpserver.config;
 import io.maxafrica.gpserver.security.CustomUserDetailsService;
 import io.maxafrica.gpserver.security.JwtAuthenticationEntryPoint;
 import io.maxafrica.gpserver.security.JwtAuthenticationFilter;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -27,6 +29,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
 @Configuration
 @EnableWebSecurity
@@ -41,12 +44,16 @@ public class SecurityConfig {
     @Autowired
     private JwtAuthenticationEntryPoint unauthorizedHandler;
 
+    @Autowired
+    @Qualifier("handlerExceptionResolver")
+    private HandlerExceptionResolver handlerExceptionResolver;
+
 
 
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
-        return new JwtAuthenticationFilter();
+        return new JwtAuthenticationFilter(handlerExceptionResolver);
     }
 
 
@@ -58,6 +65,11 @@ public class SecurityConfig {
     @Bean
     RequestRejectedHandler requestRejectedHandler() {
         return new HttpStatusRequestRejectedHandler();
+    }
+
+    @Bean
+    public ModelMapper modelMapper() {
+        return new ModelMapper();
     }
 
     @Bean
@@ -131,8 +143,10 @@ public class SecurityConfig {
 
                                 .anyRequest()
                                 .authenticated()
-                );
-        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+
+                )
+                .authenticationProvider(authenticationProvider()).addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
     }
 

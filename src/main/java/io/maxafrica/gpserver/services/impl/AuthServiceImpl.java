@@ -42,15 +42,6 @@ public class AuthServiceImpl implements AuthService {
     @Value("${user.role}")
     private String userRole;
 
-//
-//    public AuthServiceImpl(UserRepository userRepository, RoleRepository roleRepository, TokenProvider tokenProvider, AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder) {
-//        this.userRepository = userRepository;
-//        this.roleRepository = roleRepository;
-//        this.tokenProvider = tokenProvider;
-//        this.authenticationManager = authenticationManager;
-//        this.passwordEncoder = passwordEncoder;
-//    }
-
     @Override
     public ResponseEntity<ApiResponse> createUser(RegisterUser registerUser) {
         Role role = roleRepository.findByName(userRole);

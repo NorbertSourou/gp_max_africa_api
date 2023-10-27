@@ -4,6 +4,9 @@ import io.maxafrica.gpserver.entities.*;
 import io.maxafrica.gpserver.entities.enums.TypePrivilege;
 import io.maxafrica.gpserver.repositories.*;
 import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
@@ -15,8 +18,11 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Configuration
+@RequiredArgsConstructor
+@Slf4j
 public class DataLoadConfig {
 
     private static final String COMMA_DELIMITER = ",";
@@ -31,16 +37,6 @@ public class DataLoadConfig {
     @Value("${user.role}")
     private String userRole;
 
-    public DataLoadConfig(RoleRepository roleRepository, PrivilegeRepository privilegeRepository, PasswordEncoder passwordEncoder, UserRepository userRepository, CategoryRepository categoryRepository, SubCategoryRepository subCategoryRepository, PostRepository postRepository) {
-        this.roleRepository = roleRepository;
-        this.privilegeRepository = privilegeRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.userRepository = userRepository;
-        this.categoryRepository = categoryRepository;
-        this.subCategoryRepository = subCategoryRepository;
-
-        this.postRepository = postRepository;
-    }
 
     @PostConstruct
     public void loadData() {
@@ -80,7 +76,7 @@ public class DataLoadConfig {
 
                     postList.add(new Post(values[1], values[2], values[4], values[0].replace("\"", ""), values[6]));
                     postRepository.save(new Post(values[1], values[2], values[4], values[0], values[6]));
-                    System.out.println("Save posts " + values[1]);
+                    log.info("Save posts " + values[1]);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -92,9 +88,8 @@ public class DataLoadConfig {
         loadPostsSubCategories();
     }
 
+
     private void loadLinkPostsCategories() {
-
-
         Resource resource = new ClassPathResource("static/category_post.csv");
 
         String filePath;
@@ -107,14 +102,12 @@ public class DataLoadConfig {
                 while ((line = br.readLine()) != null) {
 
                     String[] values = line.split(COMMA_DELIMITER);
-                    Post post = postRepository.findByPosition(values[2]);
-                    if (post != null) {
-                        post.setCategory(categoryRepository.findByPosition(values[1]));
-
+                    Optional<Post> postOptional = postRepository.findByPosition(values[2].replace("\"", ""));
+                    if (postOptional.isPresent()) {
+                        Post post = postOptional.get();
+                        post.getCategories().add(categoryRepository.findByPosition(values[1].replace("\"", "")));
                         postRepository.save(post);
-
-                        System.out.println("Save category to post" + post.getTitle());
-
+                        log.info("Add category to post " + post.getTitle());
                     }
                 }
             } catch (Exception e) {
@@ -140,12 +133,12 @@ public class DataLoadConfig {
                 while ((line = br.readLine()) != null) {
 
                     String[] values = line.split(COMMA_DELIMITER);
-                    Post post = postRepository.findByPosition(values[1]);
-                    if (post != null) {
-                        post.getSubCategory().add(subCategoryRepository.findByPosition(values[2]));
+                    Optional<Post> postOptional = postRepository.findByPosition(values[1]);
+                    if (postOptional.isPresent()) {
+                        Post post = postOptional.get();
+                        post.getSubCategories().add(subCategoryRepository.findByPosition(values[2]));
                         postRepository.save(post);
-
-                        System.out.println("Save subcategory to post" + subCategoryRepository.findByPosition(values[2]));
+                        log.info("Add subcategory to post" + subCategoryRepository.findByPosition(values[2]));
                     }
                 }
             } catch (Exception e) {
@@ -163,20 +156,15 @@ public class DataLoadConfig {
         List<SubCategory> subCategoryList = new ArrayList<>();
 
         Resource resource = new ClassPathResource("static/subcategories.csv");
-
         String filePath;
-
         try {
             filePath = resource.getFile().getAbsolutePath();
             try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
                 br.readLine();
                 String line;
                 while ((line = br.readLine()) != null) {
-
                     String[] values = line.split(COMMA_DELIMITER);
-
                     subCategoryList.add(new SubCategory(values[1], categoryRepository.findByPosition(values[3]), values[0]));
-                    System.out.println("Save subcategory " + values[1]);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -186,6 +174,7 @@ public class DataLoadConfig {
         }
 
         subCategoryRepository.saveAll(subCategoryList);
+        log.info("Save all subcategories : " + subCategoryList.size());
     }
 
 
@@ -220,7 +209,6 @@ public class DataLoadConfig {
                 while ((line = br.readLine()) != null) {
                     String[] values = line.split(COMMA_DELIMITER);
                     categoriesList.add(new Category(values[1], values[0]));
-                    System.out.println("Save category " + values[1]);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -229,6 +217,7 @@ public class DataLoadConfig {
             throw new RuntimeException(e);
         }
         categoryRepository.saveAll(categoriesList);
+        log.info("Save all categories : " + categoriesList.size());
     }
 
 }

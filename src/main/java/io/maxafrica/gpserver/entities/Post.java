@@ -1,19 +1,19 @@
 package io.maxafrica.gpserver.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.maxafrica.gpserver.entities.enums.PostLevel;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import java.sql.Types;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -27,6 +27,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
+@Builder
 public class Post extends BaseEntity {
     @Id
     @GeneratedValue(generator = "uuid2")
@@ -53,14 +54,6 @@ public class Post extends BaseEntity {
 
     private Long nbViews;
 
-    public Post(String title, String description, String url, String position, String imageUrl) {
-        this.title = title;
-        this.description = description;
-        this.url = url;
-        this.position = position;
-        this.imageUrl = imageUrl;
-    }
-
     @Column(columnDefinition = "varchar(50) default 'PUBLIC'")
     @Enumerated(EnumType.STRING)
     private PostLevel postLevel;
@@ -68,14 +61,22 @@ public class Post extends BaseEntity {
     @ManyToOne
     private User user;
 
-    @ManyToOne
-    private Category category;
-
-
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER)
-    private List<SubCategory> subCategory;
+    private Set<Category> categories = new HashSet<>();
+
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Set<SubCategory> subCategories = new HashSet<>();
 
     @ManyToMany
     private List<Tag> tags;
 
+    public Post(String title, String description, String url, String position, String imageUrl) {
+        this.title = title;
+        this.description = description;
+        this.url = url;
+        this.position = position;
+        this.imageUrl = imageUrl;
+    }
 }

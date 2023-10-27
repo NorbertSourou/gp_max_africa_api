@@ -38,9 +38,6 @@ public class SubCategory extends BaseEntity {
 
     private String position;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    private List<Post> posts;
-
     public SubCategory(String name, Category category, String position) {
         this.name = name;
         this.category = category;

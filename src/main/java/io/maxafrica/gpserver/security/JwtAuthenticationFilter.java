@@ -12,6 +12,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.io.IOException;
 
@@ -24,23 +25,40 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     CustomUserDetailsService customUserDetailsService;
 
+    private HandlerExceptionResolver handlerExceptionResolver;
+
+    @Autowired
+    public JwtAuthenticationFilter(HandlerExceptionResolver handlerExceptionResolver) {
+        this.handlerExceptionResolver = handlerExceptionResolver;
+    }
+
+
+
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		String jwt = getJwtFromRequest(request);
 
-        if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
-            String userId = tokenProvider.getUserIdFromJWT(jwt);
+        try {
+            String jwt = getJwtFromRequest(request);
 
-            UserDetails userDetails = customUserDetailsService.loadUserById(userId);
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+            if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
+                String userId = tokenProvider.getUserIdFromJWT(jwt);
 
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+                UserDetails userDetails = customUserDetailsService.loadUserById(userId);
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            }
+
+
+            filterChain.doFilter(request, response);
+        }catch (Exception e) {
+            handlerExceptionResolver.resolveException(request, response, null, e);
         }
 
-        filterChain.doFilter(request, response);
 	}
 	
 	private String getJwtFromRequest(HttpServletRequest request) {

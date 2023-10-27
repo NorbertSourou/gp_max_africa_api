@@ -3,7 +3,6 @@ package io.maxafrica.gpserver.entities;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
@@ -17,7 +16,11 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "categories")
-@JpaEntity(table = "categories")
+@SQLDelete(sql =
+        "UPDATE categories " +
+                "SET deleted = true " +
+                "WHERE id = ?")
+@Where(clause = "deleted = false")
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
@@ -33,13 +36,13 @@ public class Category extends BaseEntity {
 
     private String position;
 
+    @OneToMany(mappedBy = "category")
+    private List<SubCategory> subCategories;
+
     public Category(String name, String position) {
         this.name = name;
         this.position = position;
     }
-
-    @OneToMany(mappedBy = "category")
-    private List<SubCategory> subCategories;
 
     public UUID getId() {
         return id;
