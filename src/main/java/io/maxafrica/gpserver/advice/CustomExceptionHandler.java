@@ -10,6 +10,7 @@ import org.springframework.http.ProblemDetail;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 import java.net.BindException;
 import java.nio.file.AccessDeniedException;
@@ -30,7 +31,7 @@ public class CustomExceptionHandler {
             problemDetail = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(403), exception.getMessage());
         }
 
-        if (exception instanceof ResourceNotFoundException) {
+        if (exception instanceof ResourceNotFoundException || exception instanceof NoHandlerFoundException) {
             problemDetail = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(404), exception.getMessage());
         }
 
