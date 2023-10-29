@@ -1,0 +1,38 @@
+version: "3.8"
+services:
+  gp_max_africa:
+    build: .
+    ports:
+      - 8090:8090
+    networks:
+      - springapimysql-net
+    environment:
+      SPRING_APPLICATION_JSON: '{
+        "spring.datasource.url" : "jdbc:mysql://mysqldb:3306/gp_server?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&characterEncoding=utf8",
+        "spring.datasource.username" : "olakouns",
+        "spring.datasource.password" : "mot2P@ss"
+      }'
+    depends_on:
+      - mysqldb
+
+    volumes:
+      - .m2:/root/.m2
+
+  mysqldb:
+    image: "mysql:8.0"
+    restart: always
+    ports:
+      - 3308:3306
+    networks:
+      - springapimysql-net
+    environment:
+      MYSQL_DATABASE: gp_server
+      MYSQL_USER: olakouns
+      MYSQL_PASSWORD: mot2P@ss
+      MYSQL_ROOT_PASSWORD: mot2P@ssazerty
+    volumes:
+      - db:/var/lib/mysql
+networks:
+  springapimysql-net:
+volumes:
+  db:
