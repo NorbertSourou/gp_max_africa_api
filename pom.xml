@@ -109,6 +109,7 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
+					<mainClass>io.maxafrica.gpserver.GpServerApplication</mainClass>
 					<excludes>
 						<exclude>
 							<groupId>org.projectlombok</groupId>
@@ -119,5 +120,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
 </project>
