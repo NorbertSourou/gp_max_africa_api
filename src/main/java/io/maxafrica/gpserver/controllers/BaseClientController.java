@@ -41,19 +41,18 @@ public class BaseClientController {
     }
 
 
-
     @GetMapping("/category/{categoryId}/subcategories/page")
     public Page<SubCategoryDTO> getSubCategoriesByCategoryPage(@PathVariable UUID categoryId,
-                                                         @RequestParam(required = false, defaultValue = "") String search,
-                                                         @RequestParam(required = false, defaultValue = "0") int page,
-                                                         @RequestParam(required = false, defaultValue = "50") int size) {
+                                                               @RequestParam(required = false, defaultValue = "") String search,
+                                                               @RequestParam(required = false, defaultValue = "0") int page,
+                                                               @RequestParam(required = false, defaultValue = "50") int size) {
         return baseClientService.getSubCategoriesByCategoryPage(categoryId, search, page, size);
     }
 
     @GetMapping("/category/{categoryId}/subcategories")
     public List<SubCategoryDTO> getSubCategoriesByCategory(@PathVariable UUID categoryId,
-                                                         @RequestParam(required = false, defaultValue = "") String search,
-                                                         @RequestParam(required = false, defaultValue = "4") int limit) {
+                                                           @RequestParam(required = false, defaultValue = "") String search,
+                                                           @RequestParam(required = false, defaultValue = "4") int limit) {
         return baseClientService.getSubCategoriesByCategory(categoryId, search, limit);
     }
 
@@ -70,11 +69,19 @@ public class BaseClientController {
         return baseClientService.getPostsBySubCategoryPage(subcategoryId, search, page, size);
     }
 
+    @GetMapping("/subcategory/{subcategoryId}/post/{postId}/random")
+    public List<PostDTO> getRandomPostsBySubCategory(
+            @PathVariable Long subcategoryId,
+            @PathVariable UUID postId,
+            @RequestParam(required = false, defaultValue = "4") int limit) {
+        return baseClientService.getRandomPosts(subcategoryId, postId, limit);
+    }
+
     @GetMapping("posts")
-    public Page<PostDTO> getPostsByCategoryAndSubCategoryPage(@RequestParam(required = false, defaultValue = "") UUID categoryId, @RequestParam (required = false, defaultValue = "")  Long subCategoryId,
-                                                   @RequestParam(required = false, defaultValue = "") String search,
-                                                   @RequestParam(required = false, defaultValue = "0") int page,
-                                                   @RequestParam(required = false, defaultValue = "50") int size) {
+    public Page<PostDTO> getPostsByCategoryAndSubCategoryPage(@RequestParam(required = false, defaultValue = "") UUID categoryId, @RequestParam(required = false, defaultValue = "") Long subCategoryId,
+                                                              @RequestParam(required = false, defaultValue = "") String search,
+                                                              @RequestParam(required = false, defaultValue = "0") int page,
+                                                              @RequestParam(required = false, defaultValue = "50") int size) {
         return baseClientService.getPostsByCategoryAndSubCategoryPage(categoryId, subCategoryId, search, page, size);
     }
 }

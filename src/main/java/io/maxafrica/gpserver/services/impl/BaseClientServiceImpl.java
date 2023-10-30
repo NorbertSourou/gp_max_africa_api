@@ -13,7 +13,9 @@ import io.maxafrica.gpserver.repositories.SubCategoryRepository;
 import io.maxafrica.gpserver.services.BaseClientService;
 import io.maxafrica.gpserver.services.specifications.PostSpecifications;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,11 +25,13 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class BaseClientServiceImpl implements BaseClientService {
 
@@ -96,8 +100,25 @@ public class BaseClientServiceImpl implements BaseClientService {
     }
 
     @Override
-    public List<Post> getRandomPosts(UUID categoryId, UUID postId, int limit) {
-        return postRepository.getRandomPostsByCategoryAndExcludingPostId(categoryId, postId, Pageable.ofSize(limit));
+    public List<PostDTO> getRandomPosts(Long subCategory, UUID postId, int limit) {
+        List<UUID> postIds = postRepository.findPostIdsExcludingPostId(postId, subCategory);
+
+
+        Random random = new Random();
+
+        List<UUID> selectedItems = new ArrayList<>();
+        while (selectedItems.size() < limit) {
+            int randomIndex = random.nextInt(postIds.size());
+            UUID selectedItem = postIds.get(randomIndex);
+            if (!selectedItems.contains(selectedItem)) {
+                selectedItems.add(selectedItem);
+            }
+        }
+
+        return postRepository.findByIdIn(selectedItems)
+                .stream()
+                .map(post -> modelMapper.map(post, PostDTO.class))
+                .collect(Collectors.toList());
     }
 
 
