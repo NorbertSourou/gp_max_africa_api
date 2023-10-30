@@ -88,6 +88,12 @@ public class BaseClientServiceImpl implements BaseClientService {
     }
 
     @Override
+    public List<Post> getRandomPosts(UUID categoryId, UUID postId, int limit) {
+        return postRepository.getRandomPostsByCategoryAndExcludingPostId(categoryId, postId, Pageable.ofSize(limit));
+    }
+
+
+    @Override
     public Page<PostDTO> getPostsByCategoryAndSubCategoryPage(UUID categoryId, Long subCategoryId, String search, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Order.asc("title")));
         List<UUID> categoryIds = new ArrayList<>();

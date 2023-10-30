@@ -28,6 +28,8 @@ public interface BaseClientService {
 
     Page<PostDTO> getPostsBySubCategoryPage(Long subCategoryId, String search, int page, int size);
 
+    List<Post> getRandomPosts(UUID categoryId , UUID postId,int limit);
+
     Page<PostDTO> getPostsByCategoryAndSubCategoryPage(UUID categoryId, Long subCategoryId, String search, int page, int size);
 //    TODO: autres videos  à suivre CLIENT
 
