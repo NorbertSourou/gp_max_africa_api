@@ -38,6 +38,11 @@ public class BaseClientServiceImpl implements BaseClientService {
 
 
     @Override
+    public Category getCategory(UUID categoryUUID) {
+        return categoryRepository.findById(categoryUUID).orElseThrow(() -> new ResourceNotFoundException("Category", "id", categoryUUID));
+    }
+
+    @Override
     public List<CategoryDTO> getCategories(int limit) {
         return categoryRepository.findAllLimit(limit)
                 .stream()
@@ -72,7 +77,9 @@ public class BaseClientServiceImpl implements BaseClientService {
 
     @Override
     public Page<SubCategoryDTO> getSubCategoriesByCategoryPage(UUID categoryId, String search, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Order.asc("name")));
+        getCategory(categoryId);
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Order.asc("position")));
         String key = "%" + search.toLowerCase() + "%";
         Specification<SubCategory> subCategorySpecification = (root, query, criteriaBuilder) ->
                 criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), criteriaBuilder.literal(key));
@@ -83,12 +90,15 @@ public class BaseClientServiceImpl implements BaseClientService {
 
     @Override
     public Page<PostDTO> getPostsBySubCategoryPage(Long subCategoryId, String search, int page, int size) {
+        getSubCategory(subCategoryId);
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Order.asc("title")));
         return postRepository.findAll(PostSpecifications.filterPostsBySubCategoryAndSearch(subCategoryId, search), pageable).map(post -> modelMapper.map(post, PostDTO.class));
     }
 
     @Override
     public Page<PostDTO> getPostsByCategoryAndSubCategoryPage(UUID categoryId, Long subCategoryId, String search, int page, int size) {
+        getCategory(categoryId);
+        getSubCategory(subCategoryId);
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Order.asc("title")));
         List<UUID> categoryIds = new ArrayList<>();
         List<Long> subCategoryIds = new ArrayList<>();

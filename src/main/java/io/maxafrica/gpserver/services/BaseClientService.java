@@ -13,8 +13,11 @@ import java.util.UUID;
 
 public interface BaseClientService {
 
-//    TODO: tendances actuelles  CLIENT ( limit 3)
+    //    TODO: tendances actuelles  CLIENT ( limit 3)
+    Category getCategory(UUID categoryUUID);
+
     List<CategoryDTO> getCategories(int limit);
+
     Page<CategoryDTO> getCategoriesPage(String search, int page, int size);
 
     SubCategoryDTO getSubCategory(Long subCategoryId);
