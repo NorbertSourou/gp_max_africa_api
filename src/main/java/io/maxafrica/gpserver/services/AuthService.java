@@ -9,4 +9,6 @@ public interface AuthService {
     ResponseEntity<ApiResponse> createUser(RegisterUser registerUser);
 
     ResponseEntity<?>  authenticateUser(LoginRequest loginRequest);
+
+    ResponseEntity<?> getValidateToken(String refreshToken);
 }

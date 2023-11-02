@@ -20,7 +20,6 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         // TODO Auto-generated method stub
-
         User user = userRepository.findByEmailOrUsername(username, username)
                 .orElseThrow(() ->
                         new UsernameNotFoundException("User not found with username or email : " + username)
@@ -29,11 +28,10 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     public UserDetails loadUserById(String id) throws ResourceNotFoundException {
-
         User user = userRepository.findById(UUID.fromString(id)).orElseThrow(
                 () -> new BadCredentialsException("Not authorized to access this resource")
         );
-        return UserPrincipal.create(user);
+            return UserPrincipal.create(user);
     }
 
 }

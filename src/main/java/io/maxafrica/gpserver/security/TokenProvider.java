@@ -76,7 +76,7 @@ public class TokenProvider {
 
         // JWT for refresh token
         Map<String, Object> claimsRefresh = new HashMap<>();
-        String accessToken = Jwts.builder()
+        String refreshToken = Jwts.builder()
                 .setClaims(claimsRefresh)
                 .setSubject(userDetails.getId().toString())
                 .setIssuedAt(new Date())
@@ -90,7 +90,7 @@ public class TokenProvider {
                 .toList();
 
 
-        return new JwtAuthenticationResponse(token, accessToken, expiryDate, tokenPermission, new UserResponse(userDetails.getUsername(), userDetails.getEmail()), categoryDTOS);
+        return new JwtAuthenticationResponse(token, refreshToken, expiryDate, tokenPermission, new UserResponse(userDetails.getUsername(), userDetails.getEmail()), categoryDTOS);
     }
 
     private CategoryDTO convertToDto(Category category) {
@@ -115,25 +115,8 @@ public class TokenProvider {
     }
 
     private boolean validateJWT(String authToken, String jwtSecret) {
-//        try {
         Jwts.parser().setSigningKey(jwtSecret.getBytes()).parseClaimsJws(authToken);
         return true;
-//        } catch (SignatureException ex) {
-//            logger.error("Invalid JWT signature");
-//            throw ex;
-//        } catch (MalformedJwtException ex) {
-//            logger.error("Invalid JWT token");
-//            throw ex;
-//        } catch (ExpiredJwtException ex) {
-//            logger.error("Expired JWT token");
-//            throw ex;
-//        } catch (UnsupportedJwtException ex) {
-//            logger.error("Unsupported JWT token");
-//            throw ex;
-//        } catch (IllegalArgumentException ex) {
-//            logger.error("JWT claims string is empty.");
-//            throw ex;
-//        }
     }
 
 

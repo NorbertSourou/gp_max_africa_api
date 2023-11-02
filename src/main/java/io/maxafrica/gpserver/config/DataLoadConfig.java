@@ -40,6 +40,7 @@ public class DataLoadConfig {
 
     @PostConstruct
     public void loadData() {
+        addActuatorUser();
         loadRole();
 
         loadCategoriesCsv();
@@ -48,6 +49,29 @@ public class DataLoadConfig {
 
         loadTags();
         loadPostsTags();
+    }
+
+    private void addActuatorUser() {
+        if (userRepository.existsByUsername("actuator")){
+            return;
+        }
+
+        Privilege privilege = new Privilege(TypePrivilege.ACTUATOR, "ACTUATOR");
+//        privilege = privilegeRepository.save(privilege);
+
+        List<Privilege> privilegeActuator = new ArrayList<>();
+        privilegeActuator.add(privilege);
+
+        Role role = new Role("ACTUATOR", "ACTUATOR");
+        role.setPrivileges(privilegeActuator);
+        role = roleRepository.save(role);
+
+        User user = new User();
+        user.setUsername("actuator");
+        user.setEmail("admin.actuator@maxafrica.io");
+        user.setPassword(passwordEncoder.encode("actuatorPWD"));
+        user.setRole(role);
+        userRepository.save(user);
     }
 
     private void loadPostsTags() {

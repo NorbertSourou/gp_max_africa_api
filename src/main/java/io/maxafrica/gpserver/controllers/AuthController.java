@@ -2,6 +2,7 @@ package io.maxafrica.gpserver.controllers;
 
 
 import io.maxafrica.gpserver.dto.ApiResponse;
+import io.maxafrica.gpserver.dto.JwtAuthenticationResponse;
 import io.maxafrica.gpserver.dto.LoginRequest;
 import io.maxafrica.gpserver.dto.RegisterUser;
 import io.maxafrica.gpserver.services.AuthService;
@@ -29,5 +30,10 @@ public class AuthController {
     @PostMapping("login")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
         return this.authService.authenticateUser(loginRequest);
+    }
+
+    @PostMapping("refresh")
+    public ResponseEntity<?> getValidateToken(@RequestBody JwtAuthenticationResponse jwtAuthenticationResponse) {
+        return this.authService.getValidateToken(jwtAuthenticationResponse.getRefreshToken());
     }
 }
