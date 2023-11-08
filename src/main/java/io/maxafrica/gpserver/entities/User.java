@@ -8,11 +8,14 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.*;
 
 import java.sql.Types;
 import java.util.UUID;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "users")
 @SQLDelete(sql =
@@ -20,6 +23,7 @@ import java.util.UUID;
                 "SET deleted = true " +
                 "WHERE id = ?")
 @Where(clause = "deleted = false")
+@Data
 public class User extends BaseEntity {
 
     @Id
@@ -37,7 +41,7 @@ public class User extends BaseEntity {
 
     private String phoneNumber;
 
-    @Size(min=8, max=20)
+    @Size(max = 100, min = 6)
     @NotBlank
     @JsonIgnore
     private String password;
@@ -50,4 +54,6 @@ public class User extends BaseEntity {
 
     @ManyToOne
     private Role role;
+
+
 }

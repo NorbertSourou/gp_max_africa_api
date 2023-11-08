@@ -1,5 +1,6 @@
 package io.maxafrica.gpserver.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -9,7 +10,8 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
-@Data
+import java.util.List;
+
 @Entity
 @Table(name = "subcategories")
 @SQLDelete(sql =
@@ -19,6 +21,7 @@ import org.hibernate.annotations.Where;
 @Where(clause = "deleted = false")
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
 @EqualsAndHashCode(callSuper = true)
 public class SubCategory extends BaseEntity {
 
@@ -29,9 +32,42 @@ public class SubCategory extends BaseEntity {
     @NotBlank
     private String name;
 
-    @Column(unique = true)
-    private String slug;
-
+    @JsonIgnore
     @ManyToOne
     private Category category;
+
+    private String position;
+
+    public SubCategory(String name, Category category, String position) {
+        this.name = name;
+        this.category = category;
+        this.position = position;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @JsonIgnore
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
 }
+
+

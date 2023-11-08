@@ -28,13 +28,6 @@ public class Tag extends BaseEntity {
     private Long id;
 
     @NotBlank
-    private String name;
-
     @Column(unique = true)
-    private String slug;
-
-    @ManyToMany
-    List<Post> posts;
-
-
+    private String name;
 }

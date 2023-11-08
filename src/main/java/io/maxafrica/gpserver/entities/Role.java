@@ -5,11 +5,14 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.*;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import java.util.Collection;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "roles")
 @SQLDelete(sql =
@@ -17,6 +20,7 @@ import java.util.Collection;
                 "SET deleted = true " +
                 "WHERE id = ?")
 @Where(clause = "deleted = false")
+@Data
 public class Role extends BaseEntity {
 
     @Id
@@ -38,4 +42,20 @@ public class Role extends BaseEntity {
     @JoinColumn
     @JsonIgnore
     private User createdBy;
+
+    public Role() {
+    }
+
+    public Role(int id, String name, String description, Collection<Privilege> privileges, User createdBy) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.privileges = privileges;
+        this.createdBy = createdBy;
+    }
+
+    public Role(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
 }

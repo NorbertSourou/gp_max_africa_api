@@ -12,7 +12,7 @@ public class RequestNotAcceptableException extends RuntimeException {
 	private static final long serialVersionUID = 4762225915473017668L;
 	private String message;
 
-    public RequestNotAcceptableException(String message) {
+    public  	RequestNotAcceptableException(String message) {
         super(message);
         this.message = message;
     }

@@ -15,7 +15,6 @@ import java.sql.Types;
 import java.util.List;
 import java.util.UUID;
 
-@Data
 @Entity
 @Table(name = "categories")
 @SQLDelete(sql =
@@ -25,6 +24,7 @@ import java.util.UUID;
 @Where(clause = "deleted = false")
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
 @EqualsAndHashCode(callSuper = true)
 public class Category extends BaseEntity {
     @Id
@@ -38,9 +38,43 @@ public class Category extends BaseEntity {
 
     private String position;
 
-    @Column(unique = true)
-    private String slug;
-
     @OneToMany(mappedBy = "category")
     private List<SubCategory> subCategories;
+
+    public Category(String name, String position) {
+        this.name = name;
+        this.position = position;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
+    }
+
+    public List<SubCategory> getSubCategories() {
+        return subCategories;
+    }
+
+    public void setSubCategories(List<SubCategory> subCategories) {
+        this.subCategories = subCategories;
+    }
 }

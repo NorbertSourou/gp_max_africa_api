@@ -21,4 +21,6 @@ public class CustomInstantSerializer extends JsonSerializer<Instant> {
 
         gen.writeString(formatter.format(Date.from(value)));
     }
+
+
 }
