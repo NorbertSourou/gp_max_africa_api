@@ -5,6 +5,7 @@ import io.maxafrica.gpserver.exceptions.BadRequestException;
 import io.maxafrica.gpserver.exceptions.NoAuthorizationException;
 import io.maxafrica.gpserver.exceptions.RequestNotAcceptableException;
 import io.maxafrica.gpserver.exceptions.ResourceNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ProblemDetail;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -16,11 +17,14 @@ import java.net.BindException;
 import java.nio.file.AccessDeniedException;
 
 @RestControllerAdvice
+@Slf4j
 public class CustomExceptionHandler {
 
     @ExceptionHandler(value = {Exception.class})
     public ProblemDetail handleSecurityException(Exception exception) {
 
+
+        log.error("Error Message - {}", exception.getMessage());
         ProblemDetail problemDetail = null;
 
         if (exception instanceof BadCredentialsException) {

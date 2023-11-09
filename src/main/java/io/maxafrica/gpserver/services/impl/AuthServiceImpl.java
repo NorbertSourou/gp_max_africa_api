@@ -8,6 +8,7 @@ import io.maxafrica.gpserver.entities.Role;
 import io.maxafrica.gpserver.entities.User;
 import io.maxafrica.gpserver.entities.enums.UserType;
 import io.maxafrica.gpserver.exceptions.NoAuthorizationException;
+import io.maxafrica.gpserver.exceptions.ResourceNotFoundException;
 import io.maxafrica.gpserver.repositories.RoleRepository;
 import io.maxafrica.gpserver.repositories.UserRepository;
 import io.maxafrica.gpserver.security.TokenProvider;
@@ -49,11 +50,11 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public ResponseEntity<ApiResponse> createUser(RegisterUser registerUser) {
-        Role role = roleRepository.findByName(userRole);
+        Role role = roleRepository.findByName(userRole).orElseThrow(() -> new ResourceNotFoundException("Role", "name", userRole));
+        System.err.println(role);
         if (userRepository.existsByEmail(registerUser.getEmail())) {
             return ResponseEntity.badRequest().body(new ApiResponse(false, "User already registered!"));
         }
-
 
         User user = new User();
         user.setEmail(registerUser.getEmail());
@@ -86,7 +87,8 @@ public class AuthServiceImpl implements AuthService {
                 )
         );
 
-        // TODO: 10/9/2023 Check if user account is validate 
+
+        // TODO: 10/9/2023 Check if user account is validate
 
 //        UserPrincipal userP = (UserPrincipal) authentication.getPrincipal();
 //

@@ -38,8 +38,8 @@ public class Category extends BaseEntity {
 
     private String position;
 
-    @OneToMany(mappedBy = "category")
-    private List<SubCategory> subCategories;
+//    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//    private List<SubCategory> subCategories;
 
     public Category(String name, String position) {
         this.name = name;
@@ -70,11 +70,11 @@ public class Category extends BaseEntity {
         this.position = position;
     }
 
-    public List<SubCategory> getSubCategories() {
-        return subCategories;
-    }
-
-    public void setSubCategories(List<SubCategory> subCategories) {
-        this.subCategories = subCategories;
-    }
+//    public List<SubCategory> getSubCategories() {
+//        return subCategories;
+//    }
+//
+//    public void setSubCategories(List<SubCategory> subCategories) {
+//        this.subCategories = subCategories;
+//    }
 }
