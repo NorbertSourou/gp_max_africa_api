@@ -2,8 +2,10 @@ package io.maxafrica.gpserver.config;
 
 import io.maxafrica.gpserver.entities.*;
 import io.maxafrica.gpserver.entities.enums.TypePrivilege;
+import io.maxafrica.gpserver.exceptions.ResourceNotFoundException;
 import io.maxafrica.gpserver.repositories.*;
 import jakarta.annotation.PostConstruct;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -33,14 +35,16 @@ public class DataLoadConfig {
     private final SubCategoryRepository subCategoryRepository;
     private final PostRepository postRepository;
 
+    private final EntityManager entityManager;
+
     @Value("${user.role}")
     private String userRole;
 
 
     @PostConstruct
     public void loadData() {
-        addActuatorUser();
         loadRole();
+        addActuatorUser();
 
         loadCategoriesCsv();
         loadSubCategories();
@@ -50,10 +54,18 @@ public class DataLoadConfig {
         loadPostsTags();
     }
 
-    private void addActuatorUser() {
-        if (userRepository.existsByUsername("actuator")){
-            return;
+    public void loadRole() {
+        if (roleRepository.count() > 0) return;
+
+        List<Privilege> privilegeUser = new ArrayList<>();
+        for (int i = 1; i < TypePrivilege.values().length; i++) {
+            String description = TypePrivilege.values()[i].toString().replace("_", " ");
+            privilegeUser.add(new Privilege(TypePrivilege.values()[i], description));
         }
+        Role roleUser = new Role(userRole, userRole);
+        roleUser.setPrivileges(privilegeUser);
+        roleRepository.save(roleUser);
+
 
         Privilege privilege = new Privilege(TypePrivilege.ACTUATOR, "ACTUATOR");
 //        privilege = privilegeRepository.save(privilege);
@@ -63,8 +75,15 @@ public class DataLoadConfig {
 
         Role role = new Role("ACTUATOR", "ACTUATOR");
         role.setPrivileges(privilegeActuator);
-        role = roleRepository.save(role);
+        roleRepository.save(role);
+    }
 
+    private void addActuatorUser() {
+        if (userRepository.existsByUsername("actuator")){
+            return;
+        }
+
+        Role role = roleRepository.findByName("ACTUATOR").orElseThrow(() -> new ResourceNotFoundException("Role", "name", "ACTUATOR"));
         User user = new User();
         user.setUsername("actuator");
         user.setEmail("admin.actuator@maxafrica.io");
@@ -92,7 +111,6 @@ public class DataLoadConfig {
 
                         String[] values = line.split(COMMA_DELIMITER);
                         postRepository.save(new Post(values[1], values[2], values[4], values[0], values[6]));
-                        log.info("Save posts " + values[1]);
                     }
                 }
             } catch (Exception e) {
@@ -101,6 +119,9 @@ public class DataLoadConfig {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+        log.info("Save all posts " + postRepository.count());
+
         loadLinkPostsCategories();
         loadPostsSubCategories();
     }
@@ -121,9 +142,9 @@ public class DataLoadConfig {
                             Post post = postOptional.get();
                             post.getCategories().add(categoryRepository.findByPosition(values[1].replace("\"", "")));
                             postRepository.save(post);
-                            log.info("Add category to post " + post.getTitle());
                         }
                     }
+                    log.info("Set  category to each post");
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -149,9 +170,10 @@ public class DataLoadConfig {
                             Post post = postOptional.get();
                             post.getSubCategories().add(subCategoryRepository.findByPosition(values[2]));
                             postRepository.save(post);
-                            log.info("Add subcategory to post" + subCategoryRepository.findByPosition(values[2]));
                         }
                     }
+
+                    log.info("Set subcategory to each post");
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -187,22 +209,6 @@ public class DataLoadConfig {
 
         subCategoryRepository.saveAll(subCategoryList);
         log.info("Save all subcategories : " + subCategoryList.size());
-    }
-
-
-    public void loadRole() {
-        if (roleRepository.count() > 0) return;
-
-        List<Privilege> privilegeUser = new ArrayList<>();
-        for (int i = 1; i < TypePrivilege.values().length; i++) {
-            String description = TypePrivilege.values()[i].toString().replace("_", " ");
-            privilegeUser.add(privilegeRepository.save(new Privilege(TypePrivilege.values()[i], description)));
-        }
-
-        Role roleUser = new Role(userRole, userRole);
-        roleUser.setPrivileges(privilegeUser);
-        roleRepository.save(roleUser);
-
     }
 
     public void loadCategoriesCsv() {

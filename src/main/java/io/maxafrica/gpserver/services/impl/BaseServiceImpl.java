@@ -42,7 +42,7 @@ public class BaseServiceImpl implements BaseService {
 
     @Override
     public Category addCategory(Category category) {
-        category.setSubCategories(new ArrayList<>());
+//        category.setSubCategories(new ArrayList<>());
         return categoryRepository.save(category);
     }
 
